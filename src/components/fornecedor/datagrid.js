@@ -8,13 +8,13 @@ export default class Datagrid extends Component{
       super(props);
       
       this.state = { 
-        produtos: []
+        fornecedores: []
       }; 
   }
 
   async componentDidMount() {
-    const response = await api.get('produto/produtos');
-    this.setState({ produtos: response.data });
+    const response = await api.get('fornecedor/fornecedores');
+    this.setState({ fornecedores: response.data });
   }
 
   render(){
@@ -24,28 +24,26 @@ export default class Datagrid extends Component{
                     <div className='col-12'>
                         <div className='card shadow-sm'>
                             <div className='card-body'>
-                                <h5 className='card-title text-center'> Lista de produtos </h5>
-                                <Link className='btn btn-primary btn-sm float-right mb-2' to='produto/adicionar'> Adicionar produto </Link>
+                                <h5 className='card-title text-center'> Lista de Fornecedores </h5>
+                                <Link className='btn btn-primary btn-sm float-right mb-2' to='fornecedor/adicionar'> Adicionar Fornecedor </Link>
                                
-                                <table className='table table-hover'>
+                                <table className='table'>
                                     <thead>
-                                        <tr className='bg-light'>
+                                        <tr>
                                             <th>COD</th>
-                                            <th>Descrição</th>
-                                            <th>Modelo</th>
-                                            <th>Preço</th>
+                                            <th>Nome</th>
+                                            <th>CNPJ</th>
                                             <th className='text-center'>#</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {this.state.produtos.map(produto => (
-                                            <tr key={produto.id}>
-                                                <td> {produto.id} </td>
-                                                <td> {produto.descricao} </td>
-                                                <td> {produto.modelo} </td>
-                                                <td> {produto.preco} </td>
+                                        {this.state.fornecedores.map(fornecedor => (
+                                            <tr key={fornecedor.id}>
+                                                <td> {fornecedor.id} </td>
+                                                <td> {fornecedor.nome} </td>
+                                                <td> {fornecedor.cnpj} </td>
                                                 <td className='text-center'>  
-                                                    <Link to={`produto/${produto.id}`}> Ver mais </Link>
+                                                    <Link to={`fornecedor/${fornecedor.id}`}> Ver mais </Link>
                                                 </td>
                                             </tr>
                                         ))}

@@ -17,6 +17,9 @@ class Header extends Component{
                     <div className="col">
                         <Link to="/fornecedor">Fornecedor</Link>
                     </div>
+                    <div className="col">
+                        <Link to="/venda">Vendas</Link>
+                    </div>
                 </div>
             </div>
         );

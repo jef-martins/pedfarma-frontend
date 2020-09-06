@@ -66,13 +66,7 @@ class Edit extends Component {
 
     onSave = async () => {
         let produto = this.state.produto;
-        console.log( {
-            modelo: produto.modelo,
-            descricao: produto.descricao,
-            preco: produto.preco,
-            categoria_id: produto.categoria.id,
-            fabricante_id: produto.fabricante.id
-        });
+
         const response = await api.put(`produto/produtos/${produto.id}`,  {
             modelo: produto.modelo,
             descricao: produto.descricao,
@@ -80,8 +74,10 @@ class Edit extends Component {
             categoria_id: produto.categoria.id,
             fabricante_id: produto.fabricante.id
         });
-        if(response.status === 200)
+        if(response.status === 200){
             this.setState({status: !this.state.status});
+            this.set_editing();
+        }
     }
 
   onEdit = async () => {
@@ -92,6 +88,32 @@ class Edit extends Component {
 
     response = await api.get('categoria/categorias');
     this.setState({categorias: response.data});
+  }
+
+  onDelete = async () => {
+
+    let response = await api.delete(`produto/produtos/${this.state.produto.id}`);
+
+    if(response.status === 200){
+        this.setState({
+            produto: {
+                id: '',
+                descricao: '',
+                modelo: '',
+                preco: '',
+                fabricante: {
+                    id: '',
+                    nome: ''
+                },
+                categoria: {
+                    id: '',
+                    descricao: ''
+                }
+            }
+        })
+        this.setState({status: !this.state.status});
+    }
+
   }
 
   setDescricao = (e) =>{
@@ -117,7 +139,7 @@ class Edit extends Component {
                         this.state.status &&
                             <div className="row mt-3">
                                 <div className='col-10 offset-1 text-center'>
-                                    <Alerta tipo="success" texto="Atualizado com Sucesso!"/>
+                                    <Alerta tipo="success" texto="Transação Efetuada com Sucesso!"/>
                                 </div>
                             </div>
                     }
@@ -191,10 +213,12 @@ class Edit extends Component {
                                     <hr/>
                                     {
                                         !this.state.editing ? 
-                                            <button className='btn btn-primary float-right' onClick={this.onEdit}> Editar </button> 
-                                        : 
                                             <>
-                                                
+                                                <button className='btn btn-primary float-right' onClick={this.onEdit}> Editar </button> 
+                                                <button className='btn btn-danger float-right mr-2' onClick={this.onDelete}> Excluir </button> 
+                                            </>
+                                        : 
+                                            <>  
                                                 <button className='btn btn-success float-right' onClick={this.onSave}> Salvar </button>
                                                 <a className='btn btn-danger float-right mr-2' href={`/produto/${this.props.id}`}> Cancelar </a>
                                             </>
