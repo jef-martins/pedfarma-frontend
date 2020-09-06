@@ -13,35 +13,18 @@ export default class Adicionar extends Component {
                 id: '',
                 nome: '',
                 cnpj: '',
-                endereco: {
-                    id: '',
-                    logradouro: '',
-                    complemento: '',
-                    cep: '',
-                    bairro_id: ''
-                }
             },
-            enderecos: [],
             status: false
         }; 
   }
 
-  async componentDidMount() {
-
-    let response = await api.get('endereco/enderecos');
-    let enderecos = response.data
-
-    this.setState({
-        enderecos: enderecos
-    })
-  }
 
     onSave = async () => {
 
         const response = await api.post('fornecedor/fornecedores', {
             cnpj: this.state.fornecedor.cnpj,
             nome: this.state.fornecedor.nome,
-            endereco_id: this.state.fornecedor.endereco.id
+            endereco_id: 1
         });
 
         if(response.status === 200)
@@ -55,17 +38,6 @@ export default class Adicionar extends Component {
 
   setNome = (e) =>{
     this.state.fornecedor.nome = e.target.value;
-    this.setState(this.state);
-  }
-
-  setCategoria = e => {
-    this.state.produto.categoria_id = e.target.value;
-    this.setState(this.state);
-  }
-
-  setEndereco = (e) =>{
-    this.state.fornecedor.endereco.id = e.target.value;
-    console.log(this.state.fornecedor.endereco.id);
     this.setState(this.state);
   }
 
@@ -102,19 +74,6 @@ export default class Adicionar extends Component {
                                             </div>
                                         </div>
                                     </div>
-
-                                    { <div className='d-flex'>
-                                        <div className='col-6'>
-                                            <div class="form-group">
-                                                <label for="categoria"> Endereço </label>
-                                                <select className='form-control' onChange={this.setEndereco}>
-                                                    {this.state.enderecos.map(
-                                                        endereco => <option key={endereco.id} value={endereco.id}> {endereco.logradouro} </option>
-                                                    )}
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div> } 
                                     <hr/>
                                     <button className='btn btn-success float-right' disabled={this.state.status} onClick={this.onSave}> Salvar </button>
                                     <Link className='btn btn-secondary float-left mr-2' to="/fornecedor"> Listar Produtos </Link>

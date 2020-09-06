@@ -14,15 +14,7 @@ export default class Edit extends Component {
                 nome: '',
                 cpf: '',
                 email: '',
-                endereco: {
-                    id: '',
-                    logradouro: '',
-                    complemento: '',
-                    cep: '',
-                    bairro_id: ''
-                }
             },
-            enderecos: [],
             editing: false,
             status: false
         }; 
@@ -31,10 +23,6 @@ export default class Edit extends Component {
   async componentDidMount() {
     let response = await api.get(`cliente/clientes/${this.props.id}`);
     let cliente = response.data;
-    console.log(cliente);
-
-    response = await api.get(`endereco/enderecos/${cliente.endereco_id}`);
-    let endereco = response.data
 
     this.setState({
         cliente: {
@@ -42,13 +30,6 @@ export default class Edit extends Component {
             nome: cliente.nome,
             cpf: cliente.cpf,
             email: cliente.email,
-            endereco: {
-                id: endereco.id,
-                logradouro: endereco.logradouro,
-                complemento: endereco.complemento,
-                cep: endereco.cep,
-                bairro_id: endereco.bairro_id
-            }
         }
     })
   }
@@ -66,7 +47,7 @@ export default class Edit extends Component {
             cpf: cliente.cpf,
             nome: cliente.nome,
             email: cliente.email,
-            endereco_id: cliente.endereco.id,
+            endereco_id: 1,
         });
         if(response.status === 200)
             this.setState({status: !this.state.status});
@@ -74,9 +55,6 @@ export default class Edit extends Component {
 
   onEdit = async () => {
     this.set_editing();
-
-    let response = await api.get('endereco/enderecos');
-    this.setState({enderecos: response.data});
 
   }
 
@@ -91,13 +69,6 @@ export default class Edit extends Component {
                 nome: '',
                 cpf: '',
                 email: '',
-                endereco: {
-                    id: '',
-                    logradouro: '',
-                    complemento: '',
-                    cep: '',
-                    bairro_id: ''
-                }
             }
         })
         this.setState({status: !this.state.status});
@@ -120,10 +91,6 @@ export default class Edit extends Component {
     this.setState(this.state);
   }
 
-  setEndereco = (e) =>{
-    this.state.cliente.endereco.id = e.target.value;
-    this.setState(this.state);
-  }
 
   render(){
         return(
@@ -170,30 +137,6 @@ export default class Edit extends Component {
                                             </div>
                                         </div>
                                     </div>
-
-                                    { <div className='d-flex'>
-                                        <div className='col-2'>
-                                            <div className="form-group">
-                                                <label htmlFor="cep"> E-mail </label>
-                                                <input type="text" disabled={!this.state.editing} onChange={this.setCep} className="form-control" id="cep" value={this.state.cliente.cep}/>
-                                            </div>
-                                        </div>
-                                        <div className='col-6'>
-                                            <div className="form-group">
-                                                <label htmlFor="categoria"> Logradouro </label>
-                                                {
-                                                    !this.state.editing ?
-                                                        <input type="text" disabled={!this.state.editing} className="form-control" id="categoria" value={this.state.cliente.endereco.logradouro}/>
-                                                    :
-                                                        <select className='form-control' onChange={this.setEndereco} >
-                                                            {this.state.enderecos.map(
-                                                                endereco => <option key={endereco.id} value={endereco.id} selected={(endereco.id === this.state.cliente.endereco.id)} > {endereco.logradouro} </option>
-                                                            )}
-                                                        </select>
-                                                }
-                                            </div>
-                                        </div>
-                                    </div> } 
                                     
                                     <hr/>
                                     {

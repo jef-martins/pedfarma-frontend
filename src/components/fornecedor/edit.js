@@ -13,15 +13,7 @@ export default class Edit extends Component {
                 id: '',
                 nome: '',
                 cnpj: '',
-                endereco: {
-                    id: '',
-                    logradouro: '',
-                    complemento: '',
-                    cep: '',
-                    bairro_id: ''
-                }
             },
-            enderecos: [],
             editing: false,
             status: false
         }; 
@@ -31,23 +23,17 @@ export default class Edit extends Component {
     let response = await api.get(`fornecedor/fornecedores/${this.props.id}`);
     let fornecedor = response.data;
 
-    response = await api.get(`endereco/enderecos/${fornecedor.endereco_id}`);
-    let endereco = response.data
-
     this.setState({
         fornecedor: {
             id: fornecedor.id,
             nome: fornecedor.nome,
             cnpj: fornecedor.cnpj,
-            endereco: {
-                id: endereco.id,
-                logradouro: endereco.logradouro,
-                complemento: endereco.complemento,
-                cep: endereco.cep,
-                bairro_id: endereco.bairro_id
-            }
         }
     })
+  }
+  onEdit = async () => {
+    this.set_editing();
+
   }
 
     set_editing = () => {
@@ -62,19 +48,11 @@ export default class Edit extends Component {
         const response = await api.put(`fornecedor/fornecedores/${fornecedor.id}`,  {
             cnpj: fornecedor.cnpj,
             nome: fornecedor.nome,
-            endereco_id: fornecedor.endereco.id,
+            endereco_id: 1,
         });
         if(response.status === 200)
             this.setState({status: !this.state.status});
     }
-
-  onEdit = async () => {
-    this.set_editing();
-
-    let response = await api.get('endereco/enderecos');
-    this.setState({enderecos: response.data});
-
-  }
 
   onDelete = async () => {
 
@@ -86,13 +64,6 @@ export default class Edit extends Component {
                 id: '',
                 nome: '',
                 cnpj: '',
-                endereco: {
-                    id: '',
-                    logradouro: '',
-                    complemento: '',
-                    cep: '',
-                    bairro_id: ''
-                }
             }
         })
         this.setState({status: !this.state.status});
@@ -107,11 +78,6 @@ export default class Edit extends Component {
 
   setCnpj = (e) =>{
     this.state.fornecedor.cnpj = e.target.value;
-    this.setState(this.state);
-  }
-
-  setEndereco = (e) =>{
-    this.state.fornecedor.endereco.id = e.target.value;
     this.setState(this.state);
   }
 
@@ -154,24 +120,6 @@ export default class Edit extends Component {
                                             </div>
                                         </div>
                                     </div>
-
-                                    { <div className='d-flex'>
-                                        <div className='col-6'>
-                                            <div class="form-group">
-                                                <label for="categoria"> Endereço </label>
-                                                {
-                                                    !this.state.editing ?
-                                                        <input type="text" disabled={!this.state.editing} class="form-control" id="categoria" value={this.state.fornecedor.endereco.logradouro}/>
-                                                    :
-                                                        <select className='form-control' onChange={this.setEndereco} >
-                                                            {this.state.enderecos.map(
-                                                                endereco => <option key={endereco.id} value={endereco.id} selected={(endereco.id === this.state.fornecedor.endereco.id)} > {endereco.logradouro} </option>
-                                                            )}
-                                                        </select>
-                                                }
-                                            </div>
-                                        </div>
-                                    </div> } 
                                     
                                     <hr/>
                                     {
@@ -183,8 +131,8 @@ export default class Edit extends Component {
                                         : 
                                             <>
                                                 
-                                                <button className='btn btn-success float-right' disabled={this.state.status} onClick={this.onSave}> Salvar </button>
-                                                <a className='float-right mr-2' href={`/fornecedor/${this.props.id}`}><button disabled={this.state.status} className="btn btn-danger"> Cancelar </button></a>
+                                                <button className='btn btn-success float-right' onClick={this.onSave}> Salvar </button>
+                                                <a className='btn btn-danger float-right mr-2' href={`/fornecedor/${this.props.id}`}> Cancelar </a>
                                             </>
                                     }
                                     <Link className='btn btn-secondary float-left mr-2' to="/fornecedor"> Listar Produtos </Link>
